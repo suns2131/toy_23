@@ -59,9 +59,8 @@
         }
 
         .mycards {
-            margin: 20px auto 0px auto;
-            width: 95%;
-            max-width: 1200px;
+            width: 100%;
+            max-width: 1000px;
         }
 
         .mypost {
@@ -115,11 +114,28 @@
         .mybtns > button {
             margin-right: 10px;
         }
-        .image_group{
+
+        .image_group {
             margin: 10px auto 0 auto;
         }
-        .name_group{
+
+        .name_group {
             margin-bottom: 10px;
+        }
+
+        .row-cols-1{
+            margin: 0;
+        }
+
+        .col{
+            margin: 0;
+            padding: 0;
+            height: 250px;
+        }
+        .card-body{
+            padding-top: 0;
+            padding-bottom: 0;
+            align-items: flex-end;
         }
 
     </style>
@@ -137,38 +153,62 @@
                 success: function (response) {
                     console.log(response['posting'])
                     let row = response['posting']
-                    for (let i=0; i<row.length;i++)
-                    {
+                    console.log(row)
+                    for (let i = 0; i < row.length; i++) {
                         let post = row[i]['post']
                         let image = row[i]['image']
                         let name = row[i]['name']
 
-                        let temp = ` <div class="col">
-                                        <div class="card h-100">
-                                            <img src=${image}
-                                                 class="card-img-top">
-                                            <div class="card-body">
-                                                <h5 class="card-title">${name}</h5>
-                                                <p class="card-text">${post}</p>
+                        let images = new Image()
+                        images.src = image
+                        let image_width = images.width;
+                        let image_height = images.height;
+                        let ratio = image_width/image_height;
+                        console.log(`이미지 가로 : ${image_width} , 이미지 세로 : ${image_height}`)
+                        console.log(ratio)
+
+                        let temp = ``
+                        if(ratio > 1){
+                            temp = `<div class="col" style="align-items: baseline">
+                                            <div class="card h-100">
+                                                <img src=${image}
+                                                     class="card-img-top">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${name}</h5>
+                                                    <p class="card-text">${post}</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>`
+                                        </div>`
+                        }else {
+                            temp = ` <div class="col" style="align-content: stretch">
+                                            <div class="card h-100">
+                                                <img src=${image}
+                                                     class="card-img-top">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${name}</h5>
+                                                    <p class="card-text">${post}</p>
+                                                </div>
+                                            </div>
+                                        </div>`
+
+                        }
+
                         $('#cards-box').append(temp)
                     }
-                    alert(response['msg'])
+                    // alert(response['msg'])
                 }
             })
         }
 
         function posting() {
             let username = $('#user_name').text()
-            let post =$('#posting_data').val()
+            let post = $('#posting_data').val()
             let image = document.querySelector('#images').src
             // console.log(`사용자명 : ${username} \n 포스트 : ${post} \n 사진URL : ${image}`);
             $.ajax({
                 type: 'POST',
                 url: '/movie',
-                data: {url_give: image, name_give: username, post_give : post},
+                data: {url_give: image, name_give: username, post_give: post},
                 success: function (response) {
                     alert(response['msg'])
                     window.location.reload()
@@ -184,17 +224,15 @@
             $('#post-box').hide()
         }
 
-     function in_enter()
-     {
-         console.log('keyin');
-         console.log(window.event.keycode);
-         //enter입력
-         if(window.event.keycode == 13)
-         {
-            console.log('엔터입니다.')
-         }
+        function in_enter() {
+            console.log('keyin');
+            console.log(window.event.keycode);
+            //enter입력
+            if (window.event.keycode == 13) {
+                console.log('엔터입니다.')
+            }
+        }
 
-     }
     </script>
 </head>
 
@@ -203,23 +241,24 @@
     <h1>페이스북/인스타그램 클론코딩</h1>
     <button onclick="open_box()">포스트 등록하기</button>
     <div class="search">
-        <input id="insert" class="input" type="text" placeholder="검색어 입력" >
+        <input id="insert" class="input" type="text" placeholder="검색어 입력">
         <button class="button" onclick="openresult_box()">검색</button>
     </div>
 </div>
 <div class="mypost" id="post-box">
-    <label class="name_group" id ="user_name"></label>
+    <label class="name_group" id="user_name"></label>
     <div class="form-floating">
-        <textarea id="posting_data" class="form-control" placeholder="Leave a comment here" style="height: 200px"></textarea>
-        <label >포스트 입력</label>
+        <textarea id="posting_data" class="form-control" placeholder="Leave a comment here"
+                  style="height: 200px"></textarea>
+        <label>포스트 입력</label>
     </div>
     <div class="image_group">
         <img id="images" src="" class="img-fluid" alt="">
         <input type="file" id="call_image" name="avatar" accept="image/png, image/jpeg" style="margin-top: 10px">
     </div>
     <div class="form-floating mb-3" style="margin-top: 10px">
-        <input onkeyup="in_enter()" type="text" class="form-control" id="image_url" placeholder="url" >
-        <label >URL</label>
+        <input onkeyup="in_enter()" type="text" class="form-control" id="image_url" placeholder="url">
+        <label>URL</label>
     </div>
 
     <div class="mybtns">
@@ -228,7 +267,7 @@
     </div>
 </div>
 <div class="mycards">
-    <div class="row row-cols-1 row-cols-md-4 g-4" id="cards-box">
+    <div class="row row-cols-1 row-cols-md-3 g-4" id="cards-box">
         <div class="col">
             <div class="card h-100">
                 <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
@@ -282,17 +321,17 @@
 
 </body>
 <script>
-     let files = document.getElementById('call_image');
-        files.addEventListener('change', function (e) {
-            console.log((e.target.files))
-            let file = e.target.files[0]; //선택한 파일
-            let reader = new FileReader();
-            reader.readAsDataURL(file); //DATA URL 파일을 읽어냄
-            reader.onload = function () {
+    let files = document.getElementById('call_image');
+    files.addEventListener('change', function (e) {
+        console.log((e.target.files))
+        let file = e.target.files[0]; //선택한 파일
+        let reader = new FileReader();
+        reader.readAsDataURL(file); //DATA URL 파일을 읽어냄
+        reader.onload = function () {
             //이미지에 URL 매핑
             document.querySelector('#images').src = reader.result;
-            };
-        })
+        };
+    })
 
 </script>
 </html>
