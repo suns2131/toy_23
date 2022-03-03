@@ -92,6 +92,22 @@
         .name_group{
             margin-bottom: 10px;
         }
+        .container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50px;
+        }
+         .button-container{
+            margin-left: 20px;
+        }
+        a{
+            background-color: #fff;
+            border:2px solid #2199e8;
+            padding: 15px 35px;
+            border-radius: 4px;
+        }
+
 
     </style>
     <script>
@@ -113,24 +129,49 @@
                         let post = row[i]['post']
                         let image = row[i]['image']
                         let name = row[i]['name']
-
+                        let num = row[i]['num']
+                        let like = row[i]['like']
                         let temp = ` <div class="col">
-                                        <div class="card h-100">
-                                            <img src=${image}
+                                        <div class="card h-100" >
+                                            <img src=${image} width= 300px height=300px
                                                  class="card-img-top">
                                             <div class="card-body">
                                                 <h5 class="card-title">${name}</h5>
                                                 <p class="card-text">${post}</p>
+                                                 <button type="button" onload="update_class(${num},${like})" id="primary${num}" class="btn btn-outline-primary">좋아요</button>
                                             </div>
                                         </div>
                                     </div>`
                         $('#cards-box').append(temp)
+                        image_size(image)
                     }
                     alert(response['msg'])
                 }
             })
         }
+        function update_class(num,like)
+        {
+            console.log(num,like)
+            let vars = 'primary'+num;
+            if(like === '0') {
+                document.getElementById(vars).className = 'btn btn-outline-primary';
+            }
+            else {
 
+                document.getElementById(vars).className = 'btn btn-primary';
+            }
+        }
+        function image_size(src)
+        {
+            let images = new Image();
+            let image_width = 0;
+            let image_height = 0;
+
+            images.src = src;
+            image_width = images.width;
+            image_height = images.height;
+            console.log(`이미지 가로 : ${image_width} , 이미지 세로 : ${image_height}`)
+        }
         function posting() {
             let username = $('#user_name').text()
             let post =$('#posting_data').val()
@@ -146,6 +187,19 @@
                 }
             });
         }
+
+        function like_save(num,like) {
+            $.ajax({
+                type: "POST",
+                url: "/movie/like",
+                data: {num_give: num, like_give : like},
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
+                }
+            });
+        }
+
 
         function open_box() {
             $('#post-box').show()
@@ -195,6 +249,9 @@
     </div>
 </div>
 <div class="mycards">
+
+</div>
+
     <div class="row row-cols-1 row-cols-md-4 g-4" id="cards-box">
         <div class="col">
             <div class="card h-100">
