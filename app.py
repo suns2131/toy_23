@@ -16,13 +16,16 @@ def home():
 @app.route("/movie", methods=["POST"])
 def movie_post():
     url_receive = request.form['url_give']
-    name_receive = request.form['post_give']
+    name_receive = request.form['name_give']
     post_receive = request.form['post_give']
-
+    posting_all = list(db.posting.find({}, {'_id': False}))
+    count = len(posting_all) + 1
     doc = {
+        'num' : count,
         'name':name_receive,
         'post':post_receive,
-        'image':url_receive
+        'image':url_receive,
+        'like': 0
     }
     db.posting.insert_one(doc)
 
