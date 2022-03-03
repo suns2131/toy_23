@@ -138,8 +138,7 @@
                                             <div class="card-body">
                                                 <h5 class="card-title">${name}</h5>
                                                 <p class="card-text">${post}</p>
-                                                 <button type="button" onclick="update_class(${num},${like})" id="primary${num}" class="btn btn-outline-primary">좋아요</button>
-                                                 <button type="button" class="btn btn-primary">완료!</button>
+                                                 <button type="button" onload="update_class(${num},${like})" id="primary${num}" class="btn btn-outline-primary">좋아요</button>
                                             </div>
                                         </div>
                                     </div>`
@@ -152,11 +151,15 @@
         }
         function update_class(num,like)
         {
-            let vars = 'primary'+num
-            if(like == 0)
-                document.getElementById(vars).className = 'btn btn-primary';
-            else
+            console.log(num,like)
+            let vars = 'primary'+num;
+            if(like === '0') {
                 document.getElementById(vars).className = 'btn btn-outline-primary';
+            }
+            else {
+
+                document.getElementById(vars).className = 'btn btn-primary';
+            }
         }
         function image_size(src)
         {
@@ -184,6 +187,19 @@
                 }
             });
         }
+
+        function like_save(num,like) {
+            $.ajax({
+                type: "POST",
+                url: "/movie/like",
+                data: {num_give: num, like_give : like},
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
+                }
+            });
+        }
+
 
         function open_box() {
             $('#post-box').show()

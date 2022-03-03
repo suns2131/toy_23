@@ -37,6 +37,15 @@ def movie_get():
     #print(movie_list)
     return jsonify({'posting': posting})
 
+@app.route("/movie/like", methods=["POST"])
+def bucket_done():
+    num_receive = request.form['num_give']
+    like_receive = request.form['like_give']
+    print(num_receive,like_receive)
+    db.posting.update_one({'num': int(num_receive)}, {'$set': {'like': like_receive}})
+
+    return jsonify({'msg': '좋아요 완료!'})
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
