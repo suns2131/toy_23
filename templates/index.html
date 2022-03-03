@@ -123,16 +123,36 @@
             margin-bottom: 10px;
         }
 
-        .row-cols-1{
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50px;
+        }
+
+        .button-container {
+            margin-left: 20px;
+        }
+
+        a {
+            background-color: #fff;
+            border: 2px solid #2199e8;
+            padding: 15px 35px;
+            border-radius: 4px;
+        }
+
+
+        .row-cols-1 {
             margin: 0;
         }
 
-        .col{
+        .col {
             margin: 0;
             padding: 0;
             height: 250px;
         }
-        .card-body{
+
+        .card-body {
             padding-top: 0;
             padding-bottom: 0;
             align-items: flex-end;
@@ -158,17 +178,19 @@
                         let post = row[i]['post']
                         let image = row[i]['image']
                         let name = row[i]['name']
+                        let num = row[i]['num']
+                        let like = row[i]['like']
 
                         let images = new Image()
                         images.src = image
                         let image_width = images.width;
                         let image_height = images.height;
-                        let ratio = image_width/image_height;
+                        let ratio = image_width / image_height;
                         console.log(`이미지 가로 : ${image_width} , 이미지 세로 : ${image_height}`)
                         console.log(ratio)
 
                         let temp = ``
-                        if(ratio > 1){
+                        if (ratio > 1) {
                             temp = `<div class="col" style="align-items: baseline">
                                             <div class="card h-100">
                                                 <img src=${image}
@@ -176,10 +198,12 @@
                                                 <div class="card-body">
                                                     <h5 class="card-title">${name}</h5>
                                                     <p class="card-text">${post}</p>
+                                                 <button type="button" onload="update_class(${num},${like})" id="primary${num}" class="btn btn-outline-primary">좋아요</button>
+
                                                 </div>
                                             </div>
                                         </div>`
-                        }else {
+                        } else {
                             temp = ` <div class="col" style="align-content: stretch">
                                             <div class="card h-100">
                                                 <img src=${image}
@@ -199,7 +223,29 @@
                 }
             })
         }
+        function update_class(num,like)
+        {
+            console.log(num,like)
+            let vars = 'primary'+num;
+            if(like === '0') {
+                document.getElementById(vars).className = 'btn btn-outline-primary';
+            }
+            else {
 
+                document.getElementById(vars).className = 'btn btn-primary';
+            }
+        }
+        function image_size(src)
+        {
+            let images = new Image();
+            let image_width = 0;
+            let image_height = 0;
+
+            images.src = src;
+            image_width = images.width;
+            image_height = images.height;
+            console.log(`이미지 가로 : ${image_width} , 이미지 세로 : ${image_height}`)
+        }
         function posting() {
             let username = $('#user_name').text()
             let post = $('#posting_data').val()
@@ -215,6 +261,19 @@
                 }
             });
         }
+
+        function like_save(num,like) {
+            $.ajax({
+                type: "POST",
+                url: "/movie/like",
+                data: {num_give: num, like_give : like},
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
+                }
+            });
+        }
+
 
         function open_box() {
             $('#post-box').show()
