@@ -41,10 +41,15 @@ def movie_get():
 def bucket_done():
     num_receive = request.form['num_give']
     like_receive = request.form['like_give']
-    print(num_receive,like_receive)
+    #print(num_receive,like_receive)
+    like_msg = ''
+    if like_receive != '0':
+        like_msg = '좋아요 완료!'
+    else:
+        like_msg = '좋아요 취소완료!'
     db.posting.update_one({'num': int(num_receive)}, {'$set': {'like': like_receive}})
 
-    return jsonify({'msg': '좋아요 완료!'})
+    return jsonify({'msg': like_msg})
 
 
 if __name__ == '__main__':

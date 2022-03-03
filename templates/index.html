@@ -225,13 +225,19 @@
         {
             console.log(`num :${num}, like :${like}`)
             let vars = 'primary'+num;
-            if(like === '0') {
-                document.getElementById(vars).className = 'btn-outline-primary';
+            let class_name;
+            if(like == '0') {
+                document.getElementById(vars).className = 'btn btn-outline-primary';
+                class_name =document.getElementById(vars).className;
+                like = 1;
             }
             else {
-
                 document.getElementById(vars).className = 'btn btn-primary';
+                class_name =document.getElementById(vars).className;
+                like = 0;
             }
+            console.log(like,class_name);
+            like_save(num,like);
         }
 
         function image_size(src)
