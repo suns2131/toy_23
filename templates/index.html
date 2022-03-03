@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    <title>토이프로젝트 23조</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Gowun Dodum', sans-serif;
+        }
+
+        .mytitle {
+            width: 100%;
+            height: 250px;
+
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.siasat.com/wp-content/uploads/2020/04/Instagram-.jpg');
+            background-position: center;
+            background-size: cover;
+
+            color: white;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mytitle > button {
+            width: 200px;
+            height: 50px;
+
+            background-color: transparent;
+            color: white;
+
+            border-radius: 50px;
+            border: 1px solid white;
+
+            margin-top: 10px;
+        }
+
+        .mytitle > button:hover {
+            border: 2px solid white;
+        }
+
+        .mycomment {
+            color: gray;
+        }
+
+        .mycards {
+            margin: 20px auto 0px auto;
+            width: 95%;
+            max-width: 1200px;
+        }
+
+        .mypost {
+            width: 95%;
+            max-width: 500px;
+            margin: 30px auto 0px auto;
+            padding: 20px;
+            box-shadow: 0px 0px 3px 0px gray;
+
+            display: none;
+        }
+
+        .mybtns {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            margin-top: 20px;
+        }
+
+        .mybtns > button {
+            margin-right: 10px;
+        }
+        .image_group{
+            margin: 10px auto 0 auto;
+        }
+        .name_group{
+            margin-bottom: 10px;
+        }
+
+    </style>
+    <script>
+        $(document).ready(function () {
+            listing();
+        });
+
+        function listing() {
+            $('#cards-box').empty()
+            $.ajax({
+                type: 'GET',
+                url: '/movie',
+                data: {},
+                success: function (response) {
+                    console.log(response['posting'])
+                    let row = response['posting']
+                    for (let i=0; i<row.length;i++)
+                    {
+                        let post = row[i]['post']
+                        let image = row[i]['image']
+                        let name = row[i]['name']
+
+                        let temp = ` <div class="col">
+                                        <div class="card h-100">
+                                            <img src=${image}
+                                                 class="card-img-top">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${name}</h5>
+                                                <p class="card-text">${post}</p>
+                                            </div>
+                                        </div>
+                                    </div>`
+                        $('#cards-box').append(temp)
+                    }
+                    alert(response['msg'])
+                }
+            })
+        }
+
+        function posting() {
+            let username = $('#user_name').text()
+            let post =$('#posting_data').val()
+            let image = document.querySelector('#images').src
+            // console.log(`사용자명 : ${username} \n 포스트 : ${post} \n 사진URL : ${image}`);
+            $.ajax({
+                type: 'POST',
+                url: '/movie',
+                data: {url_give: image, name_give: username, post_give : post},
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.reload()
+                }
+            });
+        }
+
+        function open_box() {
+            $('#post-box').show()
+        }
+
+        function close_box() {
+            $('#post-box').hide()
+        }
+
+     function in_enter()
+     {
+         console.log('keyin');
+         console.log(window.event.keycode);
+         //enter입력
+         if(window.event.keycode == 13)
+         {
+            console.log('엔터입니다.')
+         }
+
+     }
+    </script>
+</head>
+
+<body>
+<div class="mytitle">
+    <h1>페이스북/인스타그램 클론코딩</h1>
+    <button onclick="open_box()">포스트 등록하기</button>
+</div>
+<div class="mypost" id="post-box">
+    <label class="name_group" id ="user_name"></label>
+    <div class="form-floating">
+        <textarea id="posting_data" class="form-control" placeholder="Leave a comment here" style="height: 200px"></textarea>
+        <label >포스트 입력</label>
+    </div>
+    <div class="image_group">
+        <img id="images" src="" class="img-fluid" alt="">
+        <input type="file" id="call_image" name="avatar" accept="image/png, image/jpeg" style="margin-top: 10px">
+    </div>
+    <div class="form-floating mb-3" style="margin-top: 10px">
+        <input onkeyup="in_enter()" type="text" class="form-control" id="image_url" placeholder="url" >
+        <label >URL</label>
+    </div>
+
+    <div class="mybtns">
+        <button onclick="posting()" type="button" class="btn btn-dark">기록하기</button>
+        <button onclick="close_box()" type="button" class="btn btn-outline-dark">닫기</button>
+    </div>
+</div>
+<div class="mycards">
+    <div class="row row-cols-1 row-cols-md-4 g-4" id="cards-box">
+        <div class="col">
+            <div class="card h-100">
+                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
+                     class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">영화 제목이 들어갑니다</h5>
+                    <p class="card-text">여기에 영화에 대한 설명이 들어갑니다.</p>
+                    <p>⭐⭐⭐</p>
+                    <p class="mycomment">나의 한줄 평을 씁니다</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
+                     class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">영화 제목이 들어갑니다</h5>
+                    <p class="card-text">여기에 영화에 대한 설명이 들어갑니다.</p>
+                    <p>⭐⭐⭐</p>
+                    <p class="mycomment">나의 한줄 평을 씁니다</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
+                     class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">영화 제목이 들어갑니다</h5>
+                    <p class="card-text">여기에 영화에 대한 설명이 들어갑니다.</p>
+                    <p>⭐⭐⭐</p>
+                    <p class="mycomment">나의 한줄 평을 씁니다</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
+                     class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">영화 제목이 들어갑니다</h5>
+                    <p class="card-text">여기에 영화에 대한 설명이 들어갑니다.</p>
+                    <p>⭐⭐⭐</p>
+                    <p class="mycomment">나의 한줄 평을 씁니다</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+     let files = document.getElementById('call_image');
+        files.addEventListener('change', function (e) {
+            console.log((e.target.files))
+            let file = e.target.files[0]; //선택한 파일
+            let reader = new FileReader();
+            reader.readAsDataURL(file); //DATA URL 파일을 읽어냄
+            reader.onload = function () {
+            //이미지에 URL 매핑
+            document.querySelector('#images').src = reader.result;
+            };
+        })
+
+</script>
+</html>
