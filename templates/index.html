@@ -233,6 +233,63 @@
             }
         }
 
+        function openresult_box() {
+            $('#result-box').empty()
+            $.ajax({
+                type: 'GET',
+                url: '/movie',
+                data: {},
+                success: function (response) {
+                    let row = response['posting']
+                    for (let i = 0; i < row.length; i++) {
+                        if(row[i]['post'].includes(document.getElementById("insert").value)===true) {
+                            let post = row[i]['post']
+                            let image = row[i]['image']
+                            let name = row[i]['name']
+
+                            let images = new Image()
+                            images.src = image
+                            let image_width = images.width;
+                            let image_height = images.height;
+                            let ratio = image_width/image_height;
+                            console.log(`이미지 가로 : ${image_width} , 이미지 세로 : ${image_height}`)
+                            console.log(ratio)
+
+                            let temp_html = ``
+                            if(ratio > 1){
+                                temp_html = `<div class="col" style="align-items: baseline">
+                                                <div class="card h-100">
+                                                    <img src=${image}
+                                                         class="card-img-top">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">${name}</h5>
+                                                        <p class="card-text">${post}</p>
+                                                    </div>
+                                                </div>
+                                            </div>`
+                            }else {
+                                temp_html = ` <div class="col" style="align-content: stretch">
+                                                <div class="card h-100">
+                                                    <img src=${image}
+                                                         class="card-img-top">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">${name}</h5>
+                                                        <p class="card-text">${post}</p>
+                                                    </div>
+                                                </div>
+                                            </div>`
+
+                            }
+                                $('#result-box').append(temp_html)
+                        }
+
+                    }
+                    $('#cards-box').hide()
+
+                }
+            })
+        }
+
     </script>
 </head>
 
@@ -268,54 +325,10 @@
 </div>
 <div class="mycards">
     <div class="row row-cols-1 row-cols-md-3 g-4" id="cards-box">
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
-                     class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">영화 제목이 들어갑니다</h5>
-                    <p class="card-text">여기에 영화에 대한 설명이 들어갑니다.</p>
-                    <p>⭐⭐⭐</p>
-                    <p class="mycomment">나의 한줄 평을 씁니다</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
-                     class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">영화 제목이 들어갑니다</h5>
-                    <p class="card-text">여기에 영화에 대한 설명이 들어갑니다.</p>
-                    <p>⭐⭐⭐</p>
-                    <p class="mycomment">나의 한줄 평을 씁니다</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
-                     class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">영화 제목이 들어갑니다</h5>
-                    <p class="card-text">여기에 영화에 대한 설명이 들어갑니다.</p>
-                    <p>⭐⭐⭐</p>
-                    <p class="mycomment">나의 한줄 평을 씁니다</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg"
-                     class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">영화 제목이 들어갑니다</h5>
-                    <p class="card-text">여기에 영화에 대한 설명이 들어갑니다.</p>
-                    <p>⭐⭐⭐</p>
-                    <p class="mycomment">나의 한줄 평을 씁니다</p>
-                </div>
-            </div>
-        </div>
+    </div>
+</div>
+<div class="mycards">
+    <div class="row row-cols-1 row-cols-md-3 g-4" id="result-box">
     </div>
 </div>
 
