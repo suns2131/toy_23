@@ -74,6 +74,35 @@
             display: none;
         }
 
+        .search {
+            height: 40px;
+            width: 400px;
+            border: 1px solid #1b5ac2;
+            background: transparent;
+
+            margin-top: 20px;
+        }
+
+        .input {
+            font-size: 16px;
+            height: 40px;
+            width: 340px;
+            padding: 10px;
+            border: 0px;
+            outline: none;
+            float: left;
+        }
+
+        .button {
+            width: 55px;
+            height: 100%;
+            border: 0px;
+            background: #1b5ac2;
+            outline: none;
+            float: right;
+            color: #ffffff;
+        }
+
         .mybtns {
             display: flex;
             flex-direction: row;
@@ -173,6 +202,10 @@
 <div class="mytitle">
     <h1>페이스북/인스타그램 클론코딩</h1>
     <button onclick="open_box()">포스트 등록하기</button>
+    <div class="search">
+        <input id="insert" class="input" type="text" placeholder="검색어 입력" >
+        <button class="button" onclick="openresult_box()">검색</button>
+    </div>
 </div>
 <div class="mypost" id="post-box">
     <label class="name_group" id ="user_name"></label>
