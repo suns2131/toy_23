@@ -123,17 +123,6 @@
             margin-bottom: 10px;
         }
 
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 50px;
-        }
-
-        .button-container {
-            margin-left: 20px;
-        }
-
         a {
             background-color: #fff;
             border: 2px solid #2199e8;
@@ -171,23 +160,25 @@
                 url: '/movie',
                 data: {},
                 success: function (response) {
+                    let post,image,name,num,like,class_name,images,image_width,image_height,ratio;
                     console.log(response['posting'])
                     let row = response['posting']
                     console.log(row)
                     for (let i = 0; i < row.length; i++) {
-                        let post = row[i]['post']
-                        let image = row[i]['image']
-                        let name = row[i]['name']
-                        let num = row[i]['num']
-                        let like = row[i]['like']
-
-                        let images = new Image()
+                        post = row[i]['post']
+                        image = row[i]['image']
+                        name = row[i]['name']
+                        num = row[i]['num']
+                        like = row[i]['like']
+                        class_name = return_likeclass(like);
+                        images = new Image()
                         images.src = image
-                        let image_width = images.width;
-                        let image_height = images.height;
-                        let ratio = image_width / image_height;
+                        image_width = images.width;
+                        image_height = images.height;
+                        ratio = image_width / image_height;
                         console.log(`이미지 가로 : ${image_width} , 이미지 세로 : ${image_height}`)
                         console.log(ratio)
+                        console.log(class_name);
 
                         let temp = ``
                         if (ratio > 1) {
@@ -198,8 +189,7 @@
                                                 <div class="card-body">
                                                     <h5 class="card-title">${name}</h5>
                                                     <p class="card-text">${post}</p>
-                                                 <button type="button" onload="update_class(${num},${like})" id="primary${num}" class="btn btn-outline-primary">좋아요</button>
-
+                                                 <button type="button" onclick="like_update(${num},${like})" id="primary${num}" class="${class_name}"}>좋아요</button>
                                                 </div>
                                             </div>
                                         </div>`
@@ -211,6 +201,7 @@
                                                 <div class="card-body">
                                                     <h5 class="card-title">${name}</h5>
                                                     <p class="card-text">${post}</p>
+                                                    <button type="button" onclick="like_update(${num},${like})" id="primary${num}" class="${class_name}">좋아요</button>
                                                 </div>
                                             </div>
                                         </div>`
@@ -223,18 +214,26 @@
                 }
             })
         }
-        function update_class(num,like)
+        function return_likeclass(like)
         {
-            console.log(num,like)
+             if(like == 0)
+                return 'btn btn-outline-primary';
+            else
+                return 'btn btn-primary';
+        }
+        function like_update(num,like)
+        {
+            console.log(`num :${num}, like :${like}`)
             let vars = 'primary'+num;
             if(like === '0') {
-                document.getElementById(vars).className = 'btn btn-outline-primary';
+                document.getElementById(vars).className = 'btn-outline-primary';
             }
             else {
 
                 document.getElementById(vars).className = 'btn btn-primary';
             }
         }
+
         function image_size(src)
         {
             let images = new Image();
@@ -404,6 +403,7 @@
             document.querySelector('#images').src = reader.result;
         };
     })
+
 
 </script>
 </html>
