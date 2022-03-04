@@ -60,7 +60,7 @@
 
         .mycards {
             width: 100%;
-            max-width: 1000px;
+            /*max-width: 1000px;*/
         }
 
         .mypost {
@@ -153,9 +153,47 @@
         }
 
         .card-body {
+            display: flex;
+            background-color: white;
+            color:black;
             padding-top: 0;
             padding-bottom: 0;
-            align-items: flex-end;
+            transform: translate(-50%, -218%);
+            height: 15%;
+
+        }
+
+        .card-img-top {
+            padding-top: 70%;
+            overflow: hidden;
+        }
+
+        .thumbnail-wrapper {
+            width: 33%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .thumbnail {
+            position: relative;
+            padding-top: 100%;
+            overflow: hidden;
+            background-color: black;
+            display: flex;
+        }
+
+        .thumbnail-centered {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            transform: translate(50%, 50%);
+            color: white;
+        }
+
+        .thumbnail-img {
+            transform: translate(-50%, -60%);
         }
 
     </style>
@@ -191,26 +229,30 @@
 
                         let temp = ``
                         if (ratio > 1) {
-                            temp = `<div class="col" style="align-items: baseline">
-                                            <div class="card h-100">
+                            temp = `<div class="thumbnail-wrapper" style="align-items: baseline">
+                                            <div class="thumbnail">
+                                            <div class="thumbnail-centered">
                                                 <img src=${image}
-                                                     class="card-img-top">
+                                                     class="thumbnail-img">
                                                 <div class="card-body">
+                                                    <button type="button" onload="update_class(${num},${like})" id="primary${num}" class="btn btn-outline-primary">좋아요</button>
                                                     <h5 class="card-title">${name}</h5>
                                                     <p class="card-text">${post}</p>
-                                                 <button type="button" onload="update_class(${num},${like})" id="primary${num}" class="btn btn-outline-primary">좋아요</button>
-
+                                                </div>
                                                 </div>
                                             </div>
                                         </div>`
                         } else {
-                            temp = ` <div class="col" style="align-content: stretch">
-                                            <div class="card h-100">
+                            temp = `<div class="thumbnail-wrapper" style="align-items: baseline">
+                                            <div class="thumbnail">
+                                            <div class="thumbnail-centered">
                                                 <img src=${image}
-                                                     class="card-img-top">
+                                                     class="thumbnail-img">
                                                 <div class="card-body">
+                                                    <button type="button" onload="update_class(${num},${like})" id="primary${num}" class="btn btn-outline-primary">좋아요</button>
                                                     <h5 class="card-title">${name}</h5>
                                                     <p class="card-text">${post}</p>
+                                                </div>
                                                 </div>
                                             </div>
                                         </div>`
@@ -218,25 +260,27 @@
                         }
 
                         $('#cards-box').append(temp)
+                        let heightFromTop =  document.querySelector('.card-body')
+                        let topNum = window.pageYOffset+heightFromTop.getBoundingClientRect().bottom;
+                        console.log("height : ", topNum)
                     }
                     // alert(response['msg'])
                 }
             })
         }
-        function update_class(num,like)
-        {
-            console.log(num,like)
-            let vars = 'primary'+num;
-            if(like === '0') {
+
+        function update_class(num, like) {
+            console.log(num, like)
+            let vars = 'primary' + num;
+            if (like === '0') {
                 document.getElementById(vars).className = 'btn btn-outline-primary';
-            }
-            else {
+            } else {
 
                 document.getElementById(vars).className = 'btn btn-primary';
             }
         }
-        function image_size(src)
-        {
+
+        function image_size(src) {
             let images = new Image();
             let image_width = 0;
             let image_height = 0;
@@ -246,6 +290,7 @@
             image_height = images.height;
             console.log(`이미지 가로 : ${image_width} , 이미지 세로 : ${image_height}`)
         }
+
         function posting() {
             let username = $('#user_name').text()
             let post = $('#posting_data').val()
@@ -262,11 +307,11 @@
             });
         }
 
-        function like_save(num,like) {
+        function like_save(num, like) {
             $.ajax({
                 type: "POST",
                 url: "/movie/like",
-                data: {num_give: num, like_give : like},
+                data: {num_give: num, like_give: like},
                 success: function (response) {
                     alert(response["msg"])
                     window.location.reload()
@@ -301,7 +346,7 @@
                 success: function (response) {
                     let row = response['posting']
                     for (let i = 0; i < row.length; i++) {
-                        if(row[i]['post'].includes(document.getElementById("insert").value)===true) {
+                        if (row[i]['post'].includes(document.getElementById("insert").value) === true) {
                             let post = row[i]['post']
                             let image = row[i]['image']
                             let name = row[i]['name']
@@ -310,12 +355,12 @@
                             images.src = image
                             let image_width = images.width;
                             let image_height = images.height;
-                            let ratio = image_width/image_height;
+                            let ratio = image_width / image_height;
                             console.log(`이미지 가로 : ${image_width} , 이미지 세로 : ${image_height}`)
                             console.log(ratio)
 
                             let temp_html = ``
-                            if(ratio > 1){
+                            if (ratio > 1) {
                                 temp_html = `<div class="col" style="align-items: baseline">
                                                 <div class="card h-100">
                                                     <img src=${image}
@@ -326,7 +371,7 @@
                                                     </div>
                                                 </div>
                                             </div>`
-                            }else {
+                            } else {
                                 temp_html = ` <div class="col" style="align-content: stretch">
                                                 <div class="card h-100">
                                                     <img src=${image}
@@ -339,7 +384,7 @@
                                             </div>`
 
                             }
-                                $('#result-box').append(temp_html)
+                            $('#result-box').append(temp_html)
                         }
 
                     }
