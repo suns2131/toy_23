@@ -51,7 +51,11 @@ def bucket_done():
 
     return jsonify({'msg': like_msg})
 
-
+# @app.route("/movie/reply", methods=["POST"])
+# def movie_get():
+#     posting = list(db.posting.find({}, {'_id': False}))
+#     #print(movie_list)
+#     return jsonify({'posting': posting})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

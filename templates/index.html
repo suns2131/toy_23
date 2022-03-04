@@ -155,7 +155,7 @@
         .card-body {
             display: flex;
             background-color: white;
-            color:black;
+            color: black;
             padding-top: 0;
             padding-bottom: 0;
             transform: translate(-50%, -218%);
@@ -169,9 +169,9 @@
         }
 
         .thumbnail-wrapper {
-           display: flex;
-           flex-direction: row;
-           height: 500px;
+            display: flex;
+            flex-direction: row;
+            height: 500px;
         }
 
         .thumbnail {
@@ -179,17 +179,19 @@
             flex-grow: 1;
             flex-shrink: 1;
         }
-        .card{
+
+        .card {
             display: flex;
             flex-direction: column;
             height: 100%;
         }
-        .card-header{
+
+        .card-header {
             display: flex;
             justify-content: space-between;
         }
 
-        .images{
+        .images {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -228,37 +230,39 @@
                         console.log(`이미지 가로 : ${image_width} , 이미지 세로 : ${image_height}`)
                         console.log(ratio)
                         console.log(class_name);
+                        console.log(num)
                         name = '유저명입니다.'
 
-                        let temp = ``
-
-                         if (ratio > 1) {
-                             temp = `<div class="thumbnail-wrapper" >
+                        let temp = `<div class="thumbnail-wrapper" >
                                     <div class="thumbnail">
                                         <div class="card">
                                             <div class="card-header">
                                                     <label>${name}</label>
                                                     <div class="button_group">
                                                         <button type="button" onclick="like_update(${num},${like})" id="primary${num}" class="${class_name}"}>좋아요</button>
-                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                        <button type="button" class="btn btn-primary" onclick="show_reply(${num})" data-bs-toggle="modal" data-bs-target="#exampleModal${num}">
                                                           댓글 보기
                                                         </button>
-                                                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                          <div class="modal-dialog">
-                                                            <div class="modal-content">
-                                                              <div class="modal-header">
-                                                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                              </div>
-                                                              <div class="modal-body">
-                                                                ...
-                                                              </div>
-                                                              <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                <button type="button" class="btn btn-primary">Save changes</button>
-                                                              </div>
+                                                        <div class="modal fade" id="exampleModal${num}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                      <div class="search">
+                                                                        <input id="insert" class="input" type="text" placeholder="댓글 입력">
+                                                                        <button class="button" onclick="openresult_box()">입력</button><br>
+                                                                        ${num}
+                                                                      </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                          </div>
                                                         </div>
                                                     </div>
                                             </div>
@@ -272,44 +276,12 @@
                                         </div>
                                     </div>
                                 </div>`
-                        } else {
-                            temp = `<div class="thumbnail-wrapper" >
-                                    <div class="thumbnail">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                    <label>${name}</label>
-                                                    <div class="button_group">
-                                                        <button type="button" onclick="like_update(${num},${like})" id="primary${num}" class="${class_name}"}>좋아요</button>
-                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                          댓글 보기
-                                                        </button>
-                                                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                          <div class="modal-dialog">
-                                                            <div class="modal-content">
-                                                              <div class="modal-header">
-                                                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                              </div>
-                                                              <div class="modal-body">
-                                                                ...
-                                                              </div>
-                                                              <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                <button type="button" class="btn btn-primary">Save changes</button>
-                                                              </div>
-                                                            </div>
-                                                          </div>
-                                                        </div>
-                                                    </div>
-                                            </div>
-                                        </div>`
 
-                        }
 
-                         $('#cards-box').append(temp)
-                         // let heightFromTop =  document.querySelector('.card-body')
-                         // let topNum = window.pageYOffset+heightFromTop.getBoundingClientRect().bottom;
-                         // console.log("height : ", topNum)
+                        $('#cards-box').append(temp)
+                        // let heightFromTop =  document.querySelector('.card-body')
+                        // let topNum = window.pageYOffset+heightFromTop.getBoundingClientRect().bottom;
+                        // console.log("height : ", topNum)
                     }
                     // alert(response['msg'])
                 }
@@ -317,11 +289,11 @@
         }
 
         var myModal = document.getElementById('myModal')
-                        var myInput = document.getElementById('myInput')
+        var myInput = document.getElementById('myInput')
 
-                        myModal.addEventListener('shown.bs.modal', function () {
-                            myInput.focus()
-                        })
+        myModal.addEventListener('shown.bs.modal', function () {
+            myInput.focus()
+        })
 
         function return_likeclass(like) {
             if (like == 0)
@@ -346,8 +318,12 @@
             console.log(like, class_name);
             like_save(num, like);
         }
-        function image_size(src)
-        {
+
+        function show_reply(num){
+
+        }
+
+        function image_size(src) {
             let images = new Image();
             let image_width = 0;
             let image_height = 0;
@@ -357,6 +333,7 @@
             image_height = images.height;
             console.log(`이미지 가로 : ${image_width} , 이미지 세로 : ${image_height}`)
         }
+
         function posting() {
             let username = $('#user_name').text()
             let post = $('#posting_data').val()
@@ -373,17 +350,31 @@
             });
         }
 
-        function like_save(num,like) {
+        function like_save(num, like) {
             $.ajax({
                 type: "POST",
                 url: "/movie/like",
-                data: {num_give: num, like_give : like},
+                data: {num_give: num, like_give: like},
                 success: function (response) {
                     alert(response["msg"])
                     window.location.reload()
                 }
             });
         }
+
+        // function reply() {
+        //     let reply = $('#input_reply').val()
+        //
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/movie/reply",
+        //         data: {reply_give: reply},
+        //         success: function (response) {
+        //             alert(response["msg"])
+        //             window.location.reload()
+        //         }
+        //     });
+        // }
 
 
         function open_box() {
@@ -412,7 +403,7 @@
                 success: function (response) {
                     let row = response['posting']
                     for (let i = 0; i < row.length; i++) {
-                        if(row[i]['post'].includes(document.getElementById("insert").value)===true) {
+                        if (row[i]['post'].includes(document.getElementById("insert").value) === true) {
                             let post = row[i]['post']
                             let image = row[i]['image']
                             let name = row[i]['name']
@@ -421,12 +412,12 @@
                             images.src = image
                             let image_width = images.width;
                             let image_height = images.height;
-                            let ratio = image_width/image_height;
+                            let ratio = image_width / image_height;
                             console.log(`이미지 가로 : ${image_width} , 이미지 세로 : ${image_height}`)
                             console.log(ratio)
 
                             let temp_html = ``
-                            if(ratio > 1){
+                            if (ratio > 1) {
                                 temp_html = `<div class="col" style="align-items: baseline">
                                                 <div class="card h-100">
                                                     <img src=${image}
@@ -437,7 +428,7 @@
                                                     </div>
                                                 </div>
                                             </div>`
-                            }else {
+                            } else {
                                 temp_html = ` <div class="col" style="align-content: stretch">
                                                 <div class="card h-100">
                                                     <img src=${image}
@@ -450,7 +441,7 @@
                                             </div>`
 
                             }
-                                $('#result-box').append(temp_html)
+                            $('#result-box').append(temp_html)
                         }
 
                     }
@@ -518,4 +509,5 @@
 
 
 </script>
+
 </html>
