@@ -240,26 +240,27 @@
                                                     <label>${name}</label>
                                                     <div class="button_group">
                                                         <button type="button" onclick="like_update(${num},${like})" id="primary${num}" class="${class_name}"}>좋아요</button>
-                                                        <button type="button" class="btn btn-primary" onclick="show_reply(${num})" data-bs-toggle="modal" data-bs-target="#exampleModal${num}">
+                                                        <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#exampleModal${num}" >
                                                           댓글 보기
                                                         </button>
                                                         <div class="modal fade" id="exampleModal${num}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                             <div class="modal-dialog">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
-                                                                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                                                        <h5 class="modal-title" id="exampleModalLabel">${post}</h5>
                                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                     </div>
                                                                     <div class="modal-body">
-                                                                      <div class="search">
-                                                                        <input id="replyid" class="replyclass" type="text" placeholder="댓글 입력">
-                                                                        <button class="button" onclick="save_reply()">입력</button><br>
-                                                                        ${num}
-                                                                      </div>
+                                                                            <div id="comment_body"></div>
+                                                                                <button class="button" onclick="show_reply()">보기</button>
+                                                                                <p></p>
+                                                                            <div class="search">
+                                                                                <input id="replyid" class="input" type="text" placeholder="댓글 입력">
+                                                                                <button class="button" onclick="save_reply()">입력</button>
+                                                                            </div>
                                                                     </div>
                                                                     <div class="modal-footer">
                                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                        <button type="button" class="btn btn-primary">Save changes</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -277,8 +278,8 @@
                                     </div>
                                 </div>`
 
-
                         $('#cards-box').append(temp)
+
                         // let heightFromTop =  document.querySelector('.card-body')
                         // let topNum = window.pageYOffset+heightFromTop.getBoundingClientRect().bottom;
                         // console.log("height : ", topNum)
@@ -361,7 +362,6 @@
 
         function save_reply() {
             let reply = $('#replyid').text()
-            let replyNum =
 
                 $.ajax({
                     type: "POST",
@@ -375,38 +375,21 @@
         }
 
         function show_reply() {
-
+            $('#comment_body').empty()
             $.ajax({
                 type: 'GET',
                 url: '/movie/reply',
                 data: {},
                 success: function (response) {
+                    let reply;
                     let row = response['posting']
                     for (let i = 0; i < row.length; i++) {
-                        let reply = row[i]['reply']
-                        let temp_html = `<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                      <div class="search">
-                                                                        <input id="replyid" class="replyclass" type="text" placeholder="댓글 입력">
-                                                                        <button class="button" onclick="save_reply()">입력</button><br>
-                                                                      </div>
-                                                                        <div>
-                                                                            <ul>${reply}</ul>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                        <button type="button" class="btn btn-primary">Save changes</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>`
+                        reply = row[i]['reply']
+
+                        let comment = `<div>reply</div>`
+                        $('#comment_body').append(comment)
+
+
                     }
                 }
             })
