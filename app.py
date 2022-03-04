@@ -51,11 +51,22 @@ def bucket_done():
 
     return jsonify({'msg': like_msg})
 
-# @app.route("/movie/reply", methods=["POST"])
-# def movie_get():
-#     posting = list(db.posting.find({}, {'_id': False}))
-#     #print(movie_list)
-#     return jsonify({'posting': posting})
+@app.route("/movie/reply", methods=["POST"])
+def save_reply():
+    reply_receive = request.form['reply_give']
+    doc = {
+        'reply': reply_receive
+    }
+    db.posting.insert_one(doc)
+
+    return jsonify({'msg': '등록되었습니다!'})
+
+
+@app.route("/movie/reply", methods=["GET"])
+def show_reply():
+    posting = list(db.posting.find({}, {'_id': False}))
+
+    return jsonify({'posting': posting})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
