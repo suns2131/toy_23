@@ -54,8 +54,10 @@ def bucket_done():
 @app.route("/movie/reply", methods=["POST"])
 def save_reply():
     reply_receive = request.form['reply_give']
+    num_receive = request.form['num']
     doc = {
-        'reply': reply_receive
+        'reply': reply_receive,
+        'num': num_receive
     }
     db.posting.insert_one(doc)
 

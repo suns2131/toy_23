@@ -256,7 +256,7 @@
                                                                                 <p></p>
                                                                             <div class="search">
                                                                                 <input id="replyid" class="input" type="text" placeholder="댓글 입력">
-                                                                                <button class="button" onclick="save_reply()">입력</button>
+                                                                                <button class="button" onclick="save_reply2()">입력</button>
                                                                             </div>
                                                                     </div>
                                                                     <div class="modal-footer">
@@ -360,13 +360,17 @@
             });
         }
 
-        function save_reply() {
+        function save_reply2(num) {
             let reply = $('#replyid').text()
+            save_reply(num, reply)
+        }
 
+
+        function save_reply(num,reply) {
                 $.ajax({
                     type: "POST",
                     url: "/movie/reply",
-                    data: {reply_give: reply},
+                    data: {reply_give: reply,num_give: num},
                     success: function (response) {
                         alert(response["msg"])
                         window.location.reload()
@@ -381,12 +385,13 @@
                 url: '/movie/reply',
                 data: {},
                 success: function (response) {
-                    let reply;
+                    let reply,num;
                     let row = response['posting']
                     for (let i = 0; i < row.length; i++) {
+                        num = row[i]['num']
                         reply = row[i]['reply']
 
-                        let comment = `<div>reply</div>`
+                        let comment = `<label>${reply}</label>`
                         $('#comment_body').append(comment)
 
 
