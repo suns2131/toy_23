@@ -59,15 +59,14 @@ def save_reply():
         'reply': reply_receive,
         'num': num_receive
     }
-    db.posting.insert_one(doc)
+    db.reply.insert_one(doc)
 
     return jsonify({'msg': '등록되었습니다!'})
 
 
 @app.route("/movie/reply", methods=["GET"])
 def show_reply():
-    posting = list(db.posting.find({}, {'_id': False}))
-
+    posting = list(db.reply.find({}, {'_id': False}))
     return jsonify({'posting': posting})
 
 if __name__ == '__main__':

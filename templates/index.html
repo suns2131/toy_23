@@ -225,7 +225,7 @@
                     let post, image, name, post_num, like, class_name, images, image_width, image_height, ratio;
                     // console.log(response['posting'])
                     let row = response['posting']
-                    console.log(row)
+                    // console.log(row)
 
                     for (let i = 0; i < row.length; i++) {
                         post = row[i]['post']
@@ -252,7 +252,7 @@
                                                     <label>${name}</label>
                                                     <div class="button_group">
                                                         <button type="button" onclick="like_update(${post_num},${like})" id="primary${post_num}" class="${class_name}"}>좋아요</button>
-                                                        <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#exampleModal${post_num}" >
+                                                        <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#exampleModal${post_num}" onclick="show_reply(${post_num})">
                                                           댓글
                                                         </button>
                                                         <div class="modal fade" id="exampleModal${post_num}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -264,10 +264,10 @@
                                                                     </div>
                                                                     <div class="modal-body">
                                                                             <div class="input_reply">
-                                                                                <input id="replyid" class="input-reply" type="text" placeholder="댓글 입력">
-                                                                                <button class="button" onclick="save_reply2()">입력</button>
+                                                                                <input id="replyid${post_num}" class="input-reply" type="text" placeholder="댓글 입력">
+                                                                                <button class="button"  onclick="save_reply(${post_num})">입력</button>
                                                                             </div>
-                                                                            <div class="saved_reply" id="comment_body">
+                                                                            <div class="saved_reply" id="comment_body${post_num}">
                                                                             </div>
                                                                     </div>
                                                                     <div class="modal-footer">
@@ -324,7 +324,7 @@
         }
 
         function like_update(num, like) {
-            console.log(`num :${num}, like :${like}`)
+            // console.log(`num :${num}, like :${like}`)
             let vars = 'primary' + num;
             let class_name;
             if (like == '0') {
@@ -336,7 +336,7 @@
                 class_name = document.getElementById(vars).className;
                 like = 0;
             }
-            console.log(like, class_name);
+            // console.log(like, class_name);
             like_save(num, like);
         }
 
@@ -347,52 +347,47 @@
                 return 'btn btn-danger';
         }
 
-        var myModal = document.getElementById('myModal')
-        var myInput = document.getElementById('myInput')
 
-        myModal.addEventListener('shown.bs.modal', function () {
-            myInput.focus()
-        })
 
-        function save_reply2(num) {
-            let reply = $('#replyid').val()
-            save_reply(num, reply)
-        }
-
-        function save_reply(num,reply) {
+        function save_reply(num) {
+            let reply = document.getElementById("replyid"+num).value
+            // console.log(num,reply)
                 $.ajax({
                     type: "POST",
                     url: "/movie/reply",
                     data: {reply_give: reply,num_give: num},
                     success: function (response) {
                         alert(response["msg"])
-                        window.location.reload()
+                        // window.location.reload()
                     }
                 });
                 show_reply()
         }
+        function show_reply(post_num) {
+                $('#comment_body').empty()
+                $.ajax({
+                    type: 'GET',
+                    url: '/movie/reply',
+                    data: {},
+                    success: function (response) {
+                        let reply,num;
+                        let row = response['posting']
+                        console.log(row) //4
+                        for (let i = 0; i < row.length; i++) {
+                            num = row[i]['num']
+                            // console.log(num,post_num,reply)
+                            if(num==post_num) {
+                                reply = row[i]['reply']
+                                let saved_reply = `<ul class="reply_data">${reply}</ul><br>`
 
-        function show_reply() {
-            // $('#comment_body').empty()
-            $.ajax({
-                type: 'GET',
-                url: '/movie/reply',
-                data: {},
-                success: function (response) {
-                    let reply,num;
-                    let row = response['posting']
-                    console.log(row.length) //4
-                    for (let i = 0; i < row.length; i++) {
-                        num = row[i]['num']
-                        reply = row[i]['reply']
-                        console.log(num)
-                        let saved_reply = `<ul class="reply_data">${reply}</ul><br>`
-                        $('#comment_body').append(saved_reply)
-
+                                $('#comment_body'+post_num).append(saved_reply)
+                            }
+                        }
                     }
-                }
-            })
+                })
         }
+
+
 
         function open_box() {
             $('#post-box').show()
@@ -403,8 +398,8 @@
         }
 
         function in_enter() {
-            console.log('keyin');
-            console.log(window.event.keycode);
+            // console.log('keyin');
+            // console.log(window.event.keycode);
             //enter입력
             if (window.event.keycode === 13) {
                 console.log('엔터입니다.')
