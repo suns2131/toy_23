@@ -165,32 +165,11 @@
             margin: 0;
         }
 
-        .col {
-            margin: 0;
-            padding: 0;
-            height: 250px;
-        }
-
-        .card-body {
-            display: flex;
-            background-color: white;
-            color: black;
-            padding-top: 0;
-            padding-bottom: 0;
-            transform: translate(-50%, -218%);
-            height: 15%;
-
-        }
-
-        .card-img-top {
-            padding-top: 70%;
-            overflow: hidden;
-        }
-
         .thumbnail-wrapper {
             display: flex;
             flex-direction: row;
-            height: 500px;
+            margin-bottom: 24px;
+            /*height: 500px;*/
         }
 
         .thumbnail {
@@ -212,6 +191,11 @@
             align-items: center;
         }
 
+        .card_image{
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
         .images {
             width: 100%;
             height: 100%;
@@ -224,10 +208,10 @@
     </style>
     <script>
         $(document).ready(function () {
-            listing();
+            upload();
         });
 
-        function listing() {
+        function upload() {
             $('#cards-box').empty()
             $.ajax({
                 type: 'GET',
@@ -302,57 +286,9 @@
                                 </div>`
 
                         $('#cards-box').append(temp)
-
-                        // let heightFromTop =  document.querySelector('.card-body')
-                        // let topNum = window.pageYOffset+heightFromTop.getBoundingClientRect().bottom;
-                        // console.log("height : ", topNum)
                     }
-                    // alert(response['msg'])
                 }
             })
-        }
-
-        var myModal = document.getElementById('myModal')
-        var myInput = document.getElementById('myInput')
-
-        myModal.addEventListener('shown.bs.modal', function () {
-            myInput.focus()
-        })
-
-        function return_likeclass(like) {
-            if (like == 0)
-                return 'btn btn-outline-danger';
-            else
-                return 'btn btn-danger';
-        }
-
-        function like_update(num, like) {
-            console.log(`num :${num}, like :${like}`)
-            let vars = 'primary' + num;
-            let class_name;
-            if (like == '0') {
-                document.getElementById(vars).className = 'btn btn-outline-danger';
-                class_name = document.getElementById(vars).className;
-                like = 1;
-            } else {
-                document.getElementById(vars).className = 'btn btn-danger';
-                class_name = document.getElementById(vars).className;
-                like = 0;
-            }
-            console.log(like, class_name);
-            like_save(num, like);
-        }
-
-
-        function image_size(src) {
-            let images = new Image();
-            let image_width = 0;
-            let image_height = 0;
-
-            images.src = src;
-            image_width = images.width;
-            image_height = images.height;
-            console.log(`이미지 가로 : ${image_width} , 이미지 세로 : ${image_height}`)
         }
 
         function posting() {
@@ -383,11 +319,41 @@
             });
         }
 
+        function like_update(num, like) {
+            console.log(`num :${num}, like :${like}`)
+            let vars = 'primary' + num;
+            let class_name;
+            if (like == '0') {
+                document.getElementById(vars).className = 'btn btn-outline-danger';
+                class_name = document.getElementById(vars).className;
+                like = 1;
+            } else {
+                document.getElementById(vars).className = 'btn btn-danger';
+                class_name = document.getElementById(vars).className;
+                like = 0;
+            }
+            console.log(like, class_name);
+            like_save(num, like);
+        }
+
+        function return_likeclass(like) {
+            if (like == 0)
+                return 'btn btn-outline-danger';
+            else
+                return 'btn btn-danger';
+        }
+
+        var myModal = document.getElementById('myModal')
+        var myInput = document.getElementById('myInput')
+
+        myModal.addEventListener('shown.bs.modal', function () {
+            myInput.focus()
+        })
+
         function save_reply2(num) {
             let reply = $('#replyid').text()
             save_reply(num, reply)
         }
-
 
         function save_reply(num,reply) {
                 $.ajax({
@@ -418,7 +384,6 @@
                         let comment = `<label>${reply}</label>`
                         $('#comment_body').append(comment)
 
-
                     }
                 }
             })
@@ -436,67 +401,67 @@
             console.log('keyin');
             console.log(window.event.keycode);
             //enter입력
-            if (window.event.keycode == 13) {
+            if (window.event.keycode === 13) {
                 console.log('엔터입니다.')
             }
         }
 
-        function openresult_box() {
-            $('#result-box').empty()
-            $.ajax({
-                type: 'GET',
-                url: '/movie',
-                data: {},
-                success: function (response) {
-                    let row = response['posting']
-                    for (let i = 0; i < row.length; i++) {
-                        if (row[i]['post'].includes(document.getElementById("insert").value) === true) {
-                            let post = row[i]['post']
-                            let image = row[i]['image']
-                            let name = row[i]['name']
-
-                            let images = new Image()
-                            images.src = image
-                            let image_width = images.width;
-                            let image_height = images.height;
-                            let ratio = image_width / image_height;
-                            console.log(`이미지 가로 : ${image_width} , 이미지 세로 : ${image_height}`)
-                            console.log(ratio)
-
-                            let temp_html = ``
-                            if (ratio > 1) {
-                                temp_html = `<div class="col" style="align-items: baseline">
-                                                <div class="card h-100">
-                                                    <img src=${image}
-                                                         class="card-img-top">
-                                                    <div class="card-body">
-                                                        <h5 class="card-title">${name}</h5>
-                                                        <p class="card-text">${post}</p>
-                                                    </div>
-                                                </div>
-                                            </div>`
-                            } else {
-                                temp_html = ` <div class="col" style="align-content: stretch">
-                                                <div class="card h-100">
-                                                    <img src=${image}
-                                                         class="card-img-top">
-                                                    <div class="card-body">
-                                                        <h5 class="card-title">${name}</h5>
-                                                        <p class="card-text">${post}</p>
-                                                    </div>
-                                                </div>
-                                            </div>`
-
-                            }
-                            $('#result-box').append(temp_html)
-                        }
-
-                    }
-                    $('#cards-box').hide()
-
-                }
-            })
-        }
+        // function openresult_box() {
+        //     $('#result-box').empty()
+        //     $.ajax({
+        //         type: 'GET',
+        //         url: '/movie',
+        //         data: {},
+        //         success: function (response) {
+        //             let row = response['posting']
+        //             for (let i = 0; i < row.length; i++) {
+        //                 if (row[i]['post'].includes(document.getElementById("insert").value) === true) {
+        //                     let post = row[i]['post']
+        //                     let image = row[i]['image']
+        //                     let name = row[i]['name']
+        //
+        //                     let images = new Image()
+        //                     images.src = image
+        //                     let image_width = images.width;
+        //                     let image_height = images.height;
+        //                     let ratio = image_width / image_height;
+        //                     console.log(`이미지 가로 : ${image_width} , 이미지 세로 : ${image_height}`)
+        //                     console.log(ratio)
+        //
+        //                     let temp_html = ``
+        //                     if (ratio > 1) {
+        //                         temp_html = `<div class="col" style="align-items: baseline">
+        //                                         <div class="card h-100">
+        //                                             <img src=${image}
+        //                                                  class="card-img-top">
+        //                                             <div class="card-body">
+        //                                                 <h5 class="card-title">${name}</h5>
+        //                                                 <p class="card-text">${post}</p>
+        //                                             </div>
+        //                                         </div>
+        //                                     </div>`
+        //                     } else {
+        //                         temp_html = ` <div class="col" style="align-content: stretch">
+        //                                         <div class="card h-100">
+        //                                             <img src=${image}
+        //                                                  class="card-img-top">
+        //                                             <div class="card-body">
+        //                                                 <h5 class="card-title">${name}</h5>
+        //                                                 <p class="card-text">${post}</p>
+        //                                             </div>
+        //                                         </div>
+        //                                     </div>`
+        //
+        //                     }
+        //                     $('#result-box').append(temp_html)
+        //                 }
+        //
+        //             }
+        //             $('#cards-box').hide()
+        //
+        //         }
+        //     })
+        // }
 
     </script>
 </head>
@@ -535,10 +500,10 @@
     <div class="row row-cols-1 row-cols-md-3 g-4" id="cards-box">
     </div>
 </div>
-<div class="mycards">
-    <div class="row row-cols-1 row-cols-md-3 g-4" id="result-box">
-    </div>
-</div>
+<!--<div class="mycards">-->
+<!--    <div class="row row-cols-1 row-cols-md-3 g-4" id="result-box">-->
+<!--    </div>-->
+<!--</div>-->
 
 </body>
 <script>
