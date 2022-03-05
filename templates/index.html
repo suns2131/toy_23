@@ -78,18 +78,36 @@
             width: 400px;
             border: 1px solid #1b5ac2;
             background: transparent;
-
             margin-top: 20px;
+        }
+
+        .input_reply{
+            height: 40px;
+            width: 100%;
+            border: 1.5px solid #1b5ac2;
+            background: transparent;
         }
 
         .input {
             font-size: 16px;
-            height: 40px;
+            height: 100%;
             width: 340px;
             padding: 10px;
             border: 0px;
             outline: none;
             float: left;
+            margin: 0;
+        }
+
+        .input-reply {
+            font-size: 16px;
+            height: 100%;
+            width: 340px;
+            padding: 10px;
+            border: 0px;
+            outline: none;
+            float: left;
+            margin: 0;
         }
 
         .button {
@@ -97,6 +115,7 @@
             height: 100%;
             border: 0px;
             background: #1b5ac2;
+            padding: 1px;
             outline: none;
             float: right;
             color: #ffffff;
@@ -187,14 +206,19 @@
         }
 
         .card-header {
+            padding: 16px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
         .images {
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+        .card_post{
+            padding: 16px;
         }
 
     </style>
@@ -241,7 +265,7 @@
                                                     <div class="button_group">
                                                         <button type="button" onclick="like_update(${num},${like})" id="primary${num}" class="${class_name}"}>좋아요</button>
                                                         <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#exampleModal${num}" >
-                                                          댓글 보기
+                                                          댓글
                                                         </button>
                                                         <div class="modal fade" id="exampleModal${num}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                             <div class="modal-dialog">
@@ -251,12 +275,11 @@
                                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                     </div>
                                                                     <div class="modal-body">
-                                                                            <div id="comment_body"></div>
-                                                                                <button class="button" onclick="show_reply()">보기</button>
-                                                                                <p></p>
-                                                                            <div class="search">
-                                                                                <input id="replyid" class="input" type="text" placeholder="댓글 입력">
+                                                                            <div class="input_reply">
+                                                                                <input id="replyid" class="input-reply" type="text" placeholder="댓글 입력">
                                                                                 <button class="button" onclick="save_reply2()">입력</button>
+                                                                            </div>
+                                                                            <div class="saved_reply">
                                                                             </div>
                                                                     </div>
                                                                     <div class="modal-footer">
@@ -298,9 +321,9 @@
 
         function return_likeclass(like) {
             if (like == 0)
-                return 'btn btn-outline-primary';
+                return 'btn btn-outline-danger';
             else
-                return 'btn btn-primary';
+                return 'btn btn-danger';
         }
 
         function like_update(num, like) {
@@ -308,11 +331,11 @@
             let vars = 'primary' + num;
             let class_name;
             if (like == '0') {
-                document.getElementById(vars).className = 'btn btn-outline-primary';
+                document.getElementById(vars).className = 'btn btn-outline-danger';
                 class_name = document.getElementById(vars).className;
                 like = 1;
             } else {
-                document.getElementById(vars).className = 'btn btn-primary';
+                document.getElementById(vars).className = 'btn btn-danger';
                 class_name = document.getElementById(vars).className;
                 like = 0;
             }
@@ -376,6 +399,7 @@
                         window.location.reload()
                     }
                 });
+                show_reply()
         }
 
         function show_reply() {
