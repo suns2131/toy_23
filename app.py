@@ -54,7 +54,7 @@ def bucket_done():
 @app.route("/movie/reply", methods=["POST"])
 def save_reply():
     reply_receive = request.form['reply_give']
-    num_receive = request.form['num']
+    num_receive = request.form['num_give']
     doc = {
         'reply': reply_receive,
         'num': num_receive

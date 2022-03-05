@@ -102,7 +102,7 @@
         .input-reply {
             font-size: 16px;
             height: 100%;
-            width: 340px;
+            width: 400px;
             padding: 10px;
             border: 0px;
             outline: none;
@@ -204,6 +204,10 @@
         .card_post{
             padding: 16px;
         }
+        .reply_data{
+            padding: 10px;
+            margin-bottom: 0px;
+        }
 
     </style>
     <script>
@@ -218,8 +222,8 @@
                 url: '/movie',
                 data: {},
                 success: function (response) {
-                    let post, image, name, num, like, class_name, images, image_width, image_height, ratio;
-                    console.log(response['posting'])
+                    let post, image, name, post_num, like, class_name, images, image_width, image_height, ratio;
+                    // console.log(response['posting'])
                     let row = response['posting']
                     console.log(row)
 
@@ -227,7 +231,7 @@
                         post = row[i]['post']
                         image = row[i]['image']
                         name = row[i]['name']
-                        num = row[i]['num']
+                        post_num = row[i]['num']
                         like = row[i]['like']
                         class_name = return_likeclass(like);
                         images = new Image()
@@ -235,10 +239,10 @@
                         image_width = images.width;
                         image_height = images.height;
                         ratio = image_width / image_height;
-                        console.log(`이미지 가로 : ${image_width} , 이미지 세로 : ${image_height}`)
-                        console.log(ratio)
-                        console.log(class_name);
-                        console.log(num)
+                        // console.log(`이미지 가로 : ${image_width} , 이미지 세로 : ${image_height}`)
+                        // console.log(ratio)
+                        // console.log(class_name);
+                        // console.log(post_num)
                         name = '유저명입니다.'
 
                         let temp = `<div class="thumbnail-wrapper" >
@@ -247,11 +251,11 @@
                                             <div class="card-header">
                                                     <label>${name}</label>
                                                     <div class="button_group">
-                                                        <button type="button" onclick="like_update(${num},${like})" id="primary${num}" class="${class_name}"}>좋아요</button>
-                                                        <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#exampleModal${num}" >
+                                                        <button type="button" onclick="like_update(${post_num},${like})" id="primary${post_num}" class="${class_name}"}>좋아요</button>
+                                                        <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#exampleModal${post_num}" >
                                                           댓글
                                                         </button>
-                                                        <div class="modal fade" id="exampleModal${num}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal fade" id="exampleModal${post_num}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                             <div class="modal-dialog">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
@@ -263,7 +267,7 @@
                                                                                 <input id="replyid" class="input-reply" type="text" placeholder="댓글 입력">
                                                                                 <button class="button" onclick="save_reply2()">입력</button>
                                                                             </div>
-                                                                            <div class="saved_reply">
+                                                                            <div class="saved_reply" id="comment_body">
                                                                             </div>
                                                                     </div>
                                                                     <div class="modal-footer">
@@ -351,7 +355,7 @@
         })
 
         function save_reply2(num) {
-            let reply = $('#replyid').text()
+            let reply = $('#replyid').val()
             save_reply(num, reply)
         }
 
@@ -369,7 +373,7 @@
         }
 
         function show_reply() {
-            $('#comment_body').empty()
+            // $('#comment_body').empty()
             $.ajax({
                 type: 'GET',
                 url: '/movie/reply',
@@ -377,12 +381,13 @@
                 success: function (response) {
                     let reply,num;
                     let row = response['posting']
+                    console.log(row.length) //4
                     for (let i = 0; i < row.length; i++) {
                         num = row[i]['num']
                         reply = row[i]['reply']
-
-                        let comment = `<label>${reply}</label>`
-                        $('#comment_body').append(comment)
+                        console.log(num)
+                        let saved_reply = `<ul class="reply_data">${reply}</ul><br>`
+                        $('#comment_body').append(saved_reply)
 
                     }
                 }
