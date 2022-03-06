@@ -361,7 +361,7 @@
                         // window.location.reload()
                     }
                 });
-                show_reply()
+                show_reply(num)
         }
         function show_reply(post_num) {
                 $('#comment_body'+post_num).empty()
@@ -372,7 +372,7 @@
                     success: function (response) {
                         let reply,num;
                         let row = response['posting']
-                        console.log(row) //4
+                        // console.log(row) //4
                         for (let i = 0; i < row.length; i++) {
                             num = row[i]['num']
                             // console.log(num,post_num,reply)
@@ -406,63 +406,84 @@
             }
         }
 
-        // function openresult_box() {
-        //     $('#result-box').empty()
-        //     $.ajax({
-        //         type: 'GET',
-        //         url: '/movie',
-        //         data: {},
-        //         success: function (response) {
-        //             let row = response['posting']
-        //             for (let i = 0; i < row.length; i++) {
-        //                 if (row[i]['post'].includes(document.getElementById("insert").value) === true) {
-        //                     let post = row[i]['post']
-        //                     let image = row[i]['image']
-        //                     let name = row[i]['name']
-        //
-        //                     let images = new Image()
-        //                     images.src = image
-        //                     let image_width = images.width;
-        //                     let image_height = images.height;
-        //                     let ratio = image_width / image_height;
-        //                     console.log(`이미지 가로 : ${image_width} , 이미지 세로 : ${image_height}`)
-        //                     console.log(ratio)
-        //
-        //                     let temp_html = ``
-        //                     if (ratio > 1) {
-        //                         temp_html = `<div class="col" style="align-items: baseline">
-        //                                         <div class="card h-100">
-        //                                             <img src=${image}
-        //                                                  class="card-img-top">
-        //                                             <div class="card-body">
-        //                                                 <h5 class="card-title">${name}</h5>
-        //                                                 <p class="card-text">${post}</p>
-        //                                             </div>
-        //                                         </div>
-        //                                     </div>`
-        //                     } else {
-        //                         temp_html = ` <div class="col" style="align-content: stretch">
-        //                                         <div class="card h-100">
-        //                                             <img src=${image}
-        //                                                  class="card-img-top">
-        //                                             <div class="card-body">
-        //                                                 <h5 class="card-title">${name}</h5>
-        //                                                 <p class="card-text">${post}</p>
-        //                                             </div>
-        //                                         </div>
-        //                                     </div>`
-        //
-        //                     }
-        //                     $('#result-box').append(temp_html)
-        //                 }
-        //
-        //             }
-        //             $('#cards-box').hide()
-        //
-        //         }
-        //     })
-        // }
+        function openresult_box() {
+            $('#result-box').empty()
+            $.ajax({
+                type: 'GET',
+                url: '/movie',
+                data: {},
+                success: function (response) {
+                    let post, image, name, post_num, like, class_name, images, image_width, image_height, ratio;
+                    let row = response['posting']
+                    for (let i = 0; i < row.length; i++) {
+                        if (row[i]['post'].includes(document.getElementById("insert").value) === true) {
+                            post = row[i]['post']
+                            image = row[i]['image']
+                            name = row[i]['name']
+                            post_num = row[i]['num']
+                            like = row[i]['like']
+                            class_name = return_likeclass(like);
+                            images = new Image()
+                            images.src = image
+                            image_width = images.width;
+                            image_height = images.height;
+                            ratio = image_width / image_height;
+                            // console.log(`이미지 가로 : ${image_width} , 이미지 세로 : ${image_height}`)
+                            // console.log(ratio)
+                            // console.log(class_name);
+                            // console.log(post_num)
+                            name = '유저명입니다.'
 
+                            let temp = `<div class="thumbnail-wrapper" >
+                                        <div class="thumbnail">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                        <label>${name}</label>
+                                                        <div class="button_group">
+                                                            <button type="button" onclick="like_update(${post_num},${like})" id="primary${post_num}" class="${class_name}"}>좋아요</button>
+                                                            <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#exampleModal${post_num}" onclick="show_reply(${post_num})">
+                                                              댓글
+                                                            </button>
+                                                            <div class="modal fade" id="exampleModal${post_num}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                <div class="modal-dialog">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title" id="exampleModalLabel">${post}</h5>
+                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                                <div class="input_reply">
+                                                                                    <input id="replyid${post_num}" class="input-reply" type="text" placeholder="댓글 입력">
+                                                                                    <button class="button"  onclick="save_reply(${post_num})">입력</button>
+                                                                                </div>
+                                                                                <div class="saved_reply" id="comment_body${post_num}">
+                                                                                </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                                <div class="card_post">
+                                                   <p>${post}</p>
+                                                </div>
+                                                <div class="card_image">
+                                                    <image class="images" src=${image}></image>
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>`
+
+                            $('#result-box').append(temp)
+                        }
+                    }$('#cards-box').hide()
+                }
+            })
+        }
     </script>
 </head>
 
@@ -500,10 +521,10 @@
     <div class="row row-cols-1 row-cols-md-3 g-4" id="cards-box">
     </div>
 </div>
-<!--<div class="mycards">-->
-<!--    <div class="row row-cols-1 row-cols-md-3 g-4" id="result-box">-->
-<!--    </div>-->
-<!--</div>-->
+<div class="mycards">
+    <div class="row row-cols-1 row-cols-md-3 g-4" id="result-box">
+    </div>
+</div>
 
 </body>
 <script>
