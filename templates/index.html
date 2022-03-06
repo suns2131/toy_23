@@ -364,7 +364,7 @@
                 show_reply()
         }
         function show_reply(post_num) {
-                $('#comment_body').empty()
+                $('#comment_body'+post_num).empty()
                 $.ajax({
                     type: 'GET',
                     url: '/movie/reply',
